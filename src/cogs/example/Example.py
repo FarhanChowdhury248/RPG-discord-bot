@@ -29,7 +29,7 @@ class Example(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, err):
         '''
-        This is an example handler for errors.
+        This is an example handler for handling errors generically.
         '''
         if isinstance(err, commands.MissingRequiredArgument):
             await ctx.send('Required arguments are missing')
@@ -44,8 +44,16 @@ class Example(commands.Cog):
         await self.client.logout()
 
     @commands.command()
-    async def clear(self, ctx, amount=5):
+    async def clear(self, ctx, amount):
         await ctx.channel.purge(limit=amount)
+
+    @clear.error
+    async def clear_error(self, ctx, err):
+        '''
+        This handler will only get run for clear command errors.
+        '''
+        if isinstance(err, commands.MissingRequiredArgument):
+            await ctx.send('Required arguments are missing for the clear command.')
 
     # tasks (note that all tasks must be started)
     @tasks.loop(seconds=10)
