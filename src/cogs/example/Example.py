@@ -16,6 +16,25 @@ class Example(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    # events
+    @commands.Cog.listener()
+    async def on_ready(self):
+        await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('Rolling initiative!'))
+        print('We have logged in as {}'.format(self.client.user))
+
+    # commands
+    @commands.command()
+    async def ping(self, ctx):
+        await ctx.send('Pong! {}ms'.format(round(self.client.latency * 1000)))
+
+    @commands.command(aliases=['logout'])
+    async def kill(self, ctx):
+        await self.client.logout()
+
+    @commands.command()
+    async def clear(self, ctx, amount=5):
+        await ctx.channel.purge(limit=amount)
+
 def setup(client):
     '''
     A global setup function must be declared for all cogs in the main cog file.
