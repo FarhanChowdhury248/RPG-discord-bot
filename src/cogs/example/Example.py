@@ -6,7 +6,10 @@ file.
 '''
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
+from itertools import cycle
+
+STATUSES = cycle(['status 1', 'status 2', 'status 3'])
 
 class Example(commands.Cog):
     '''
@@ -19,7 +22,8 @@ class Example(commands.Cog):
     # events
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('Rolling initiative!'))
+        await self.client.change_presence(status=discord.Status.idle, activity=discord.Game('Dungeons & Dragons'))
+        # self.change_status.start() # start task
         print('We have logged in as {}'.format(self.client.user))
 
     # commands
@@ -34,6 +38,12 @@ class Example(commands.Cog):
     @commands.command()
     async def clear(self, ctx, amount=5):
         await ctx.channel.purge(limit=amount)
+
+    # tasks (note that all tasks must be started)
+    @tasks.loop(seconds=10)
+    async def change_status(self):
+        print('hello')
+        await self.client.change_presence(activity=discord.Game(next(STATUSES)))
 
 def setup(client):
     '''

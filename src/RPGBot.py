@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     @client.command()
     async def reload(ctx, extension):
-        client.load_extension('cogs.{}.{}'.format(extension.lower(), extension.capitalize()))
         client.unload_extension('cogs.{}.{}'.format(extension.lower(), extension.capitalize()))
+        client.load_extension('cogs.{}.{}'.format(extension.lower(), extension.capitalize()))
 
     load_extensions(client, 'cogs')
 
