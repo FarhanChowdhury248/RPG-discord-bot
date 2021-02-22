@@ -26,6 +26,14 @@ class Example(commands.Cog):
         # self.change_status.start() # start task
         print('We have logged in as {}'.format(self.client.user))
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, err):
+        '''
+        This is an example handler for errors.
+        '''
+        if isinstance(err, commands.MissingRequiredArgument):
+            await ctx.send('Required arguments are missing')
+
     # commands
     @commands.command()
     async def ping(self, ctx):
