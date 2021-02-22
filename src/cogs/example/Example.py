@@ -44,6 +44,8 @@ class Example(commands.Cog):
         await self.client.logout()
 
     @commands.command()
+    @commands.has_permissions(manage_messages=True) # this is a check, will run before processing command
+    # @commands.check(lambda x: True) # This is a check that takes a custom func to make custom checks
     async def clear(self, ctx, amount):
         await ctx.channel.purge(limit=amount)
 
@@ -51,6 +53,7 @@ class Example(commands.Cog):
     async def clear_error(self, ctx, err):
         '''
         This handler will only get run for clear command errors.
+        ********* WARNING: THIS WILL REPLACE PRIMARY HANDLER FOR ALL ERRORS
         '''
         if isinstance(err, commands.MissingRequiredArgument):
             await ctx.send('Required arguments are missing for the clear command.')
