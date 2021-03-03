@@ -12,21 +12,38 @@ class JSONCollection(CollectionInterface):
             self.data[doc_name] = doc_data
         else:
             print('ERROR: Document already exists')
+        self.save()
 
     def update_document(self, doc_name, doc_data = {}):
         if doc_name in self.data:
             self.data[doc_name] = { **self.data[doc_name], **doc_data }
         else:
             print('ERROR: Document does not exists')
+        self.save()
     
     def delete_document(self, doc_name):
-        pass
+        if doc_name in self.data:
+            self.data.pop(doc_name)
+        else:
+            print('ERROR: Document does not exist.')
+        self.save()
     
     def get_document(self, doc_name):
-        pass
+        if doc_name in self.data:
+            return self.data[doc_name]
+        else:
+            print('ERROR: Document does not exist.')
+        self.save()
     
     def clear_document(self, doc_name):
-        pass
+        if doc_name in self.data:
+            self.data[doc_name] = {}
+        else:
+            print('ERROR: Document does not exist.')
+        self.save()
+
+    def __repr__(self):
+        return str(self.data)
 
     def save(self):
         with open(self.file_path, 'w') as f:
@@ -34,8 +51,11 @@ class JSONCollection(CollectionInterface):
 
 if __name__ == '__main__':
     col = JSONCollection('./src/database/data/hello.json')
-    col.add_document('hello')
-    # col.update_document('hello', {'a': 1, 'b': 2})
-    col.update_document('hello', {'c': 3, 'd': 4})
+    # col.add_document('hello')
+    col.update_document('hello2', {'a': 1, 'b': 2})
+    col.update_document('hello2', {'c': 3, 'd': 4})
+    
     col.add_document('hello2')
-    col.save()
+    col.clear_document('hello')
+    col.delete_document('hello')
+    print(col.get_document('hello2'))

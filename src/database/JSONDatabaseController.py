@@ -1,5 +1,6 @@
 import os
 from DatabaseControllerInterface import DatabaseControllerInterface
+from JSONCollection import JSONCollection
 import json
 
 DATA_FILE_TYPE = '.json'
@@ -29,9 +30,7 @@ class JSONDatabaseController(DatabaseControllerInterface):
 
     def get_collection(self, col_name):
         if col_name in get_jsons():
-            with open(get_json_file_path(col_name)) as f:
-                data = json.load(f)
-            return data
+            return JSONCollection(get_json_file_path(col_name))
         print('ERROR: collection does not exist')
 
     def clear_collection(self, col_name):
@@ -49,9 +48,9 @@ if __name__ == '__main__':
     db.create_collection('hello')
     db.create_collection('hello')
     print(db.get_collection('hello'))
-    # db.delete_collection('hello')
-    # db.delete_collection('hello')
-    # print(db.get_collection('hello'))
+    db.delete_collection('hello')
+    db.delete_collection('hello')
+    print(db.get_collection('hello'))
 
     # test set 2
     
