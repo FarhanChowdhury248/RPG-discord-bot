@@ -3,11 +3,15 @@ import os
 from discord.ext import commands
 from dotenv import load_dotenv
 from cogs.index import *
+from database.JSONDatabaseController import JSONDatabaseController
+
+def get_prefix(client, message): 
+    return JSONDatabaseController().get_collection('general').get_document('server_prefix')[str(message.guild.id)]
 
 if __name__ == '__main__':
-    load_dotenv(dotenv_path='../.env')
+    load_dotenv(dotenv_path=os.path.join(os.path.dirname( __file__ ), '..', '.env'))
 
-    client = commands.Bot(command_prefix='.')
+    client = commands.Bot(command_prefix=get_prefix)
 
     @client.command()
     async def load(ctx, extension):

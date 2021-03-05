@@ -8,8 +8,8 @@ def get_path(file):
 
 with open(get_path('general'), 'w+') as f:
     data = {
-        'default_settings': {
-            'server_prefix': '.'
+        'server_prefix': {
+            'default': '.'
         }
     }
     json.dump(data, f, indent=4, sort_keys=True)

@@ -1,6 +1,6 @@
 import os
-from DatabaseControllerInterface import DatabaseControllerInterface
-from JSONCollection import JSONCollection
+from database.DatabaseControllerInterface import DatabaseControllerInterface
+from database.JSONCollection import JSONCollection
 import json
 
 DATA_FILE_TYPE = '.json'
