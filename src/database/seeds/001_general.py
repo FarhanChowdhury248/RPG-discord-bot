@@ -9,7 +9,8 @@ def get_path(file):
 with open(get_path('general'), 'w+') as f:
     data = {
         'server_prefix': {
-            'default': '.'
+            'default': '.',
+            "791891956979990559": "."
         }
     }
     json.dump(data, f, indent=4, sort_keys=True)
