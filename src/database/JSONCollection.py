@@ -1,5 +1,5 @@
 import json
-from CollectionInterface import CollectionInterface
+from database.CollectionInterface import CollectionInterface
 
 class JSONCollection(CollectionInterface):
     def __init__(self, file_path):
@@ -33,7 +33,6 @@ class JSONCollection(CollectionInterface):
             return self.data[doc_name]
         else:
             print('ERROR: Document does not exist.')
-        self.save()
     
     def clear_document(self, doc_name):
         if doc_name in self.data:
@@ -47,7 +46,7 @@ class JSONCollection(CollectionInterface):
 
     def save(self):
         with open(self.file_path, 'w') as f:
-            json.dump(self.data, f, indent=4, sort_keys=True)
+            json.dump(self.data, f, indent=4)
 
 if __name__ == '__main__':
     col = JSONCollection('./src/database/data/hello.json')
