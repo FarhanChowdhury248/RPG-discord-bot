@@ -1,8 +1,8 @@
 import random
 from urllib import request, parse
 import json
-# from cogs.character_gen.models.Trait import *
-from Trait import *
+from cogs.character_gen.models.Trait import *
+# from Trait import *
 
 def choose_from(obj, key):
     if key in obj:
