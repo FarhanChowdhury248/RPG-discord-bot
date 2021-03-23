@@ -2,7 +2,9 @@ import random
 from urllib import request, parse
 import json
 # from cogs.character_gen.models.Trait import *
+# from cogs.character_gen.models.Equiment import *
 from Trait import *
+from Equipment import *
 
 API_ROOT = 'https://www.dnd5eapi.co/api/'
 
@@ -11,7 +13,7 @@ def choose_from(obj, key):
         options =  obj[key]['from']
         num_choices = obj[key]['choose']
         return (options, num_choices)
-    print("NO '{}' FOUND !!!".format(key))
+    print("\t NO '{}' FOUND !!!".format(key))
     return ([], 0)
 
 class CharacterStats:
@@ -28,16 +30,19 @@ class CharacterStats:
     _class = None
     hit_die = None
     saving_throws = []
+    equipment = []
 
     def __init__(self):
         self.alignment = random.choice(self.get_alignments())
         self.ability_scores = self.get_ability_scores()
         
         self.race = random.choice(self.get_races())
+        print('Race: ' + str(self.race))
         self.resolve_race_benefits()
         print('Finished Race')
 
         self._class = random.choice(self.get_classes())
+        print('Class: ' + str(self._class))
         self.resolve_class_benefits()
         print('Finished Class')
 
@@ -159,6 +164,16 @@ class CharacterStats:
                 if trait not in self.traits:
                     self.traits[trait] = Trait(trait)
 
+    def add_equipment(self, equipment):
+        not_found = True
+        for e in self.equipment:
+            if equipment == e:
+                not_found = False
+                e.add(equipment.quantity)
+                break
+        if not_found:
+            self.equipment.append(equipment)
+
     def resolve_class_benefits(self):
         with request.urlopen(API_ROOT + 'classes/' + self._class) as res:
             html = res.read().decode('utf-8')
@@ -170,12 +185,7 @@ class CharacterStats:
             for st in saving_throws:
                 if st['index'] not in self.saving_throws:
                     self.saving_throws.append(st['index'])
-
-            # proficiencies
-            profs = [prof['index'] for prof in obj['proficiencies']]
-            for prof in profs:
-                if prof not in self.proficiencies:
-                    self.proficiencies.append(prof)
+            print('\t' + str(self.hit_die))
 
             # proficiencies
             self.resolve_stat_collection(self.proficiencies, 
@@ -183,14 +193,23 @@ class CharacterStats:
                 'proficiencies', 
                 'proficiency_choices', 
                 True)
+            print('\t' + str(self.proficiencies))
+
 
             # equipment
-
+            for e in obj['starting_equipment']:
+                self.add_equipment(Equipment(e))
+            opt_equip_sets = obj['starting_equipment_options']
+            for opt_equip_set in opt_equip_sets:
+                opt_equips, num_opt_equips = choose_from({'key': opt_equip_set}, 'key')
+                opt_equips = opt_equips[:num_opt_equips]
+                random.shuffle(opt_equips)
+                for opt_equip in opt_equips:
+                    if 'equipment' in opt_equip:
+                        self.add_equipment(Equipment(opt_equip))
+            print('\t' + str(self.equipment))
+                
 
 if __name__ == '__main__':
     cs = CharacterStats()
     # print(cs)
-    print(cs._class + '/' + cs.race)
-    print(cs.hit_die)
-    print(cs.proficiencies)
-    print(cs.saving_throws)
