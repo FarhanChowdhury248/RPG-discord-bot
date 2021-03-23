@@ -26,4 +26,3 @@ if __name__ == '__main__':
     traits = ['fey-ancestry']
     for t in traits:
         print(Trait(t))
-        print()
