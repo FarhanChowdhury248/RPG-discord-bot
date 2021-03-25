@@ -6,11 +6,12 @@ API_ROOT = 'https://www.dnd5eapi.co/api/equipment/'
 class Equipment:
     index = None
     name = None
-    quantity = 0
+    quantity = 1
 
     def __init__(self, equipment_obj):
         self.index = equipment_obj['equipment']['index']
-        self.quantity = equipment_obj['quantity']
+        if 'quantity' in equipment_obj:
+            self.quantity = equipment_obj['quantity']
 
         with request.urlopen(API_ROOT + self.index) as res:
             html = res.read().decode('utf-8')

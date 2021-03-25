@@ -8,6 +8,35 @@ from Equipment import *
 
 API_ROOT = 'https://www.dnd5eapi.co/api/'
 
+''' 
+Maps class to class_data 
+class: str representing the index of the class as found in the api
+data: tuple containing (
+    int: spell slots at 1st lvl, 
+    int: spells learned at 1st lvl, -1 if all are known
+    bool: True if preparing, False if casting, None if non-caster
+    )
+'''
+CLASS_TO_DATA = {
+    'barbarian': (0, 0, None),
+    'bard': (2, 4, False),
+    'cleric': (2, -1, True),
+    'druid': (2, -1, True),
+    'fighter': (0, 0, None),
+    'monk': (0, 0, None),
+    'paladin': (0, 0, None),
+    'ranger': (0, 0, None),
+    'rogue': (0, 0, None),
+    'sorcerer': (2, 2, False),
+    'warlock': (1, 2, False),
+    'wizard': (2, 6, True)
+}
+
+def query_api(suffix):
+    with request.urlopen(API_ROOT + suffix) as res:
+        html = res.read().decode('utf-8')
+        return json.loads(html)
+
 def choose_from(obj, key):
     if key in obj:
         options =  obj[key]['from']
@@ -19,6 +48,7 @@ def choose_from(obj, key):
 class CharacterStats:
     alignment = None
     ability_scores = {}
+    proficiency_bonus = None
     
     race = None
     proficiencies = []
@@ -32,9 +62,17 @@ class CharacterStats:
     saving_throws = []
     equipment = []
 
+    spellcasting_ability = None
+    known_spells = []
+    prepared_spells = []
+    spell_slots = {}
+    for i in range(1, 10):
+        spell_slots[i] = 0
+
     def __init__(self):
         self.alignment = random.choice(self.get_alignments())
         self.ability_scores = self.get_ability_scores()
+        self.proficiency_bonus = 2
         
         self.race = random.choice(self.get_races())
         print('Race: ' + str(self.race))
@@ -100,6 +138,9 @@ class CharacterStats:
         for t in traits:
             scores[t] = calc_score()
         return scores
+
+    def get_modifier(self, stat):
+        return (self.ability_scores[stat] - 10) // 2
 
     def resolve_stat_collection(self, stat_collection, obj, mandatory_choices, optional_choices, optional_has_list=False):
         choices = [choice['index'] for choice in obj[mandatory_choices]]
@@ -175,39 +216,60 @@ class CharacterStats:
             self.equipment.append(equipment)
 
     def resolve_class_benefits(self):
-        with request.urlopen(API_ROOT + 'classes/' + self._class) as res:
-            html = res.read().decode('utf-8')
-            obj = json.loads(html)
+        class_data = query_api('classes/' + self._class)
 
-            # basic traits
-            self.hit_die = obj['hit_die']
-            saving_throws = obj['saving_throws']
-            for st in saving_throws:
-                if st['index'] not in self.saving_throws:
-                    self.saving_throws.append(st['index'])
-            print('\t' + str(self.hit_die))
+        # basic traits
+        self.hit_die = class_data['hit_die']
+        saving_throws = class_data['saving_throws']
+        for st in saving_throws:
+            if st['index'] not in self.saving_throws:
+                self.saving_throws.append(st['index'])
+        print('\t' + str(self.hit_die))
 
-            # proficiencies
-            self.resolve_stat_collection(self.proficiencies, 
-                obj, 
-                'proficiencies', 
-                'proficiency_choices', 
-                True)
-            print('\t' + str(self.proficiencies))
+        # proficiencies
+        self.resolve_stat_collection(self.proficiencies, 
+            class_data, 
+            'proficiencies', 
+            'proficiency_choices', 
+            True)
+        print('\t' + str(self.proficiencies))
 
 
-            # equipment
-            for e in obj['starting_equipment']:
-                self.add_equipment(Equipment(e))
-            opt_equip_sets = obj['starting_equipment_options']
-            for opt_equip_set in opt_equip_sets:
-                opt_equips, num_opt_equips = choose_from({'key': opt_equip_set}, 'key')
-                opt_equips = opt_equips[:num_opt_equips]
-                random.shuffle(opt_equips)
-                for opt_equip in opt_equips:
-                    if 'equipment' in opt_equip:
-                        self.add_equipment(Equipment(opt_equip))
-            print('\t' + str(self.equipment))
+        # equipment
+        for e in class_data['starting_equipment']:
+            self.add_equipment(Equipment(e))
+        opt_equip_sets = class_data['starting_equipment_options']
+        for opt_equip_set in opt_equip_sets:
+            opt_equips, num_opt_equips = choose_from({'key': opt_equip_set}, 'key')
+            opt_equips = opt_equips[:num_opt_equips]
+            random.shuffle(opt_equips)
+            for opt_equip in opt_equips:
+                if 'equipment' in opt_equip:
+                    self.add_equipment(Equipment(opt_equip))
+        print('\t' + str(self.equipment))
+
+        # spellcasting
+        if 'spellcasting' in class_data:
+            self.spellcasting_ability = class_data['spellcasting']['spellcasting_ability']['index']
+        
+            level_one_spells = [spell['index'] for spell in query_api('spells?level=1')['results']]
+            class_spells = [spell['index'] for spell in query_api('classes/{}/spells'.format(self._class))['results']]
+            relevant_spells = [spell for spell in level_one_spells if spell in class_spells]
+            
+            spell_slots, spells_learned, is_preparing = CLASS_TO_DATA[self._class]
+            self.spell_slots[1] = spell_slots
+            random.shuffle(relevant_spells)
+            if spells_learned != -1:
+                self.known_spells = relevant_spells[:spells_learned]
+            else:
+                self.known_spells = relevant_spells
+            if is_preparing:
+                random.shuffle(self.known_spells)
+                self.prepared_spells = self.known_spells[:max(1, 1 + self.get_modifier(self.spellcasting_ability))]
+        
+        print('\t' + str(self.spellcasting_ability))
+        print('\t' + str(self.known_spells))
+        print('\t' + str(self.prepared_spells))
                 
 
 if __name__ == '__main__':
