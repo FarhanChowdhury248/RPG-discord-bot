@@ -1,12 +1,19 @@
 import random
 from urllib import request, parse
 import json
-# from cogs.character_gen.models.Trait import *
-# from cogs.character_gen.models.Equiment import *
-from Trait import *
-from Equipment import *
+from cogs.character_gen.Trait import *
+from cogs.character_gen.Equipment import *
+#from Trait import *
+#from Equipment import *
+import traceback
 
 API_ROOT = 'https://www.dnd5eapi.co/api/'
+
+LOG_MSG = ''
+
+def log(msg, priority=0):
+    global LOG_MSG
+    LOG_MSG += priority * '\t' + msg.strip() + '\n'
 
 ''' 
 Maps class to class_data 
@@ -42,7 +49,7 @@ def choose_from(obj, key):
         options =  obj[key]['from']
         num_choices = obj[key]['choose']
         return (options, num_choices)
-    print("\t NO '{}' FOUND !!!".format(key))
+    log("NO '{}' FOUND !!!".format(key), 1)
     return ([], 0)
 
 class CharacterStats:
@@ -75,14 +82,14 @@ class CharacterStats:
         self.proficiency_bonus = 2
         
         self.race = random.choice(self.get_races())
-        print('Race: ' + str(self.race))
+        log('Race: ' + str(self.race))
         self.resolve_race_benefits()
-        print('Finished Race')
+        log('Finished Race')
 
         self._class = random.choice(self.get_classes())
-        print('Class: ' + str(self._class))
+        log('Class: ' + str(self._class))
         self.resolve_class_benefits()
-        print('Finished Class')
+        log('Finished Class')
 
     def __repr__(self):
         result = 'Character:\n'
@@ -224,7 +231,7 @@ class CharacterStats:
         for st in saving_throws:
             if st['index'] not in self.saving_throws:
                 self.saving_throws.append(st['index'])
-        print('\t' + str(self.hit_die))
+        log(str(self.hit_die), 1)
 
         # proficiencies
         self.resolve_stat_collection(self.proficiencies, 
@@ -232,7 +239,7 @@ class CharacterStats:
             'proficiencies', 
             'proficiency_choices', 
             True)
-        print('\t' + str(self.proficiencies))
+        log(str(self.proficiencies), 1)
 
 
         # equipment
@@ -246,15 +253,13 @@ class CharacterStats:
             for opt_equip in opt_equips:
                 if 'equipment' in opt_equip:
                     self.add_equipment(Equipment(opt_equip))
-        print('\t' + str(self.equipment))
+        log(str(self.equipment), 1)
 
         # spellcasting
         if 'spellcasting' in class_data:
             self.spellcasting_ability = class_data['spellcasting']['spellcasting_ability']['index']
         
-            level_one_spells = [spell['index'] for spell in query_api('spells?level=1')['results']]
-            class_spells = [spell['index'] for spell in query_api('classes/{}/spells'.format(self._class))['results']]
-            relevant_spells = [spell for spell in level_one_spells if spell in class_spells]
+            relevant_spells = [spell['index'] for spell in query_api('classes/{}/levels/1/spells'.format(self._class))['results']]
             
             spell_slots, spells_learned, is_preparing = CLASS_TO_DATA[self._class]
             self.spell_slots[1] = spell_slots
@@ -267,11 +272,14 @@ class CharacterStats:
                 random.shuffle(self.known_spells)
                 self.prepared_spells = self.known_spells[:max(1, 1 + self.get_modifier(self.spellcasting_ability))]
         
-        print('\t' + str(self.spellcasting_ability))
-        print('\t' + str(self.known_spells))
-        print('\t' + str(self.prepared_spells))
-                
+        log(str(self.spellcasting_ability), 1)
+        log(str(self.known_spells), 1)
+        log(str(self.prepared_spells), 1)
 
 if __name__ == '__main__':
-    cs = CharacterStats()
-    # print(cs)
+    try:
+        cs = CharacterStats()
+    except Exception as e:
+        log('ERROR: {}'.format(traceback.format_exc()))
+    finally:
+        print(LOG_MSG)
