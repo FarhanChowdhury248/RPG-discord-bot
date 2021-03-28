@@ -1,10 +1,10 @@
 import random
 from urllib import request, parse
 import json
-from cogs.character_gen.Trait import *
-from cogs.character_gen.Equipment import *
-#from Trait import *
-#from Equipment import *
+# from cogs.character_gen.Trait import *
+# from cogs.character_gen.Equipment import *
+from Trait import *
+from Equipment import *
 import traceback
 
 API_ROOT = 'https://www.dnd5eapi.co/api/'
@@ -20,7 +20,7 @@ Maps class to class_data
 class: str representing the index of the class as found in the api
 data: tuple containing (
     int: spell slots at 1st lvl, 
-    int: spells learned at 1st lvl, -1 if all are known
+    int: spells learned at 1st lvl, -1 if all are known,
     bool: True if preparing, False if casting, None if non-caster
     )
 '''
@@ -37,6 +37,27 @@ CLASS_TO_DATA = {
     'sorcerer': (2, 2, False),
     'warlock': (1, 2, False),
     'wizard': (2, 6, True)
+}
+
+'''
+Maps armor type to function that can calculate armor class
+armor type: str representing the index of the armor type
+function: anonymous function mapping dex bonus to ac
+'''
+ARMOR_TO_AC = {
+    'padded': lambda x: 11 + x,
+    'leather': lambda x: 11 + x,
+    'studded-leather': lambda x: 12 + x,
+    'hide': lambda x: 12 + min(x, 2),
+    'chain-shirt': lambda x: 13 + min(x, 2),
+    'scale-mail': lambda x: 14 + min(x, 2),
+    'breastplate': lambda x: 14 + min(x, 2),
+    'half-plate': lambda x: 15 + min(x, 2),
+    'ring-mail': lambda x: 14,
+    'chain-mail': lambda x: 16,
+    'splint': lambda x: 17,
+    'chain-shirt': lambda x: 18,
+    'natural': lambda x: 10 + x
 }
 
 def query_api(suffix):
@@ -86,10 +107,24 @@ class CharacterStats:
         self.resolve_race_benefits()
         log('Finished Race')
 
-        self._class = random.choice(self.get_classes())
+        self._class = 'cleric' #random.choice(self.get_classes())
         log('Class: ' + str(self._class))
         self.resolve_class_benefits()
         log('Finished Class')
+
+        self.resolve_armor_class()
+
+    def resolve_armor_class(self):
+        valid_armors = [e.index for e in self.equipment if e.index in ARMOR_TO_AC]
+        mod = self.get_modifier('dex')
+        ac = 0
+        if len(valid_armors) == 0:
+            ac = ARMOR_TO_AC['natural'](mod)
+        else:
+            for armor in valid_armors:
+                ac = max(ac, ARMOR_TO_AC[armor](mod))
+        self.ac = ac
+        log('Armor Class: {}'.format(self.ac))
 
     def __repr__(self):
         result = 'Character:\n'
@@ -177,40 +212,44 @@ class CharacterStats:
             process_option_set(opt_choices, num_opt_choices)
 
     def resolve_race_benefits(self):
-        with request.urlopen(API_ROOT + 'races/' + self.race) as res:
-            html = res.read().decode('utf-8')
-            obj = json.loads(html)
+        race_data = query_api('races/' + self.race)
             
-            # ability score bonuses
-            bonuses = obj['ability_bonuses']
-            for bonus in bonuses:
-                self.ability_scores[bonus['ability_score']['index']] += bonus['bonus']
-            opt_bonuses, num_opt_bonuses = choose_from(obj, 'ability_bonus_options')
-            opt_bonuses = opt_bonuses[:num_opt_bonuses]
-            for opt_bonus in opt_bonuses:
-                self.ability_scores[opt_bonus['ability_score']['index']] += opt_bonus['bonus']
+        # ability score bonuses
+        bonuses = race_data['ability_bonuses']
+        for bonus in bonuses:
+            self.ability_scores[bonus['ability_score']['index']] += bonus['bonus']
+        opt_bonuses, num_opt_bonuses = choose_from(race_data, 'ability_bonus_options')
+        opt_bonuses = opt_bonuses[:num_opt_bonuses]
+        for opt_bonus in opt_bonuses:
+            self.ability_scores[opt_bonus['ability_score']['index']] += opt_bonus['bonus']
+        log('Ability Scores: {}'.format(self.ability_scores), 1)
 
-            # basic traits
-            self.speed = obj['speed']
-            self.size = obj['size']
+        # basic traits
+        self.speed = race_data['speed']
+        self.size = race_data['size']
+        log('Speed: {}'.format(self.speed), 1)
+        log('Size: {}'.format(self.size), 1)
 
-            # proficiencies
-            self.resolve_stat_collection(self.proficiencies, 
-                obj, 
-                'starting_proficiencies', 
-                'starting_proficiency_options')
+        # proficiencies
+        self.resolve_stat_collection(self.proficiencies, 
+            race_data, 
+            'starting_proficiencies', 
+            'starting_proficiency_options')
+        log('Proficiencies: {}'.format(self.proficiencies), 1)
 
-            # languages
-            self.resolve_stat_collection(self.languages, 
-                obj, 
-                'languages', 
-                'language_options')
+        # languages
+        self.resolve_stat_collection(self.languages, 
+            race_data, 
+            'languages', 
+            'language_options')
+        log('Languages: {}'.format(self.languages), 1)
 
-            # traits
-            race_traits = [trait['index'] for trait in obj['traits']]
-            for trait in race_traits:
-                if trait not in self.traits:
-                    self.traits[trait] = Trait(trait)
+        # traits
+        race_traits = [trait['index'] for trait in race_data['traits']]
+        for trait in race_traits:
+            if trait not in self.traits:
+                self.traits[trait] = Trait(trait)
+        log('Traits: {}'.format(list(self.traits.keys())), 1)
 
     def add_equipment(self, equipment):
         not_found = True
@@ -231,7 +270,7 @@ class CharacterStats:
         for st in saving_throws:
             if st['index'] not in self.saving_throws:
                 self.saving_throws.append(st['index'])
-        log(str(self.hit_die), 1)
+        log('Hit die: {}'.format(self.hit_die), 1)
 
         # proficiencies
         self.resolve_stat_collection(self.proficiencies, 
@@ -239,7 +278,7 @@ class CharacterStats:
             'proficiencies', 
             'proficiency_choices', 
             True)
-        log(str(self.proficiencies), 1)
+        log('Proficiencies: {}'.format(self.proficiencies), 1)
 
 
         # equipment
@@ -253,7 +292,7 @@ class CharacterStats:
             for opt_equip in opt_equips:
                 if 'equipment' in opt_equip:
                     self.add_equipment(Equipment(opt_equip))
-        log(str(self.equipment), 1)
+        log('Equipment: {}'.format(self.equipment), 1)
 
         # spellcasting
         if 'spellcasting' in class_data:
@@ -272,9 +311,9 @@ class CharacterStats:
                 random.shuffle(self.known_spells)
                 self.prepared_spells = self.known_spells[:max(1, 1 + self.get_modifier(self.spellcasting_ability))]
         
-        log(str(self.spellcasting_ability), 1)
-        log(str(self.known_spells), 1)
-        log(str(self.prepared_spells), 1)
+        log('Spellcasting Ability: {}'.format(self.spellcasting_ability), 1)
+        log('Known Spells: {}'.format(self.known_spells), 1)
+        log('Prepared Spells: {}'.format(self.prepared_spells), 1)
 
 if __name__ == '__main__':
     try:
