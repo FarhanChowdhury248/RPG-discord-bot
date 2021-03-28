@@ -70,7 +70,7 @@ def choose_from(obj, key):
         options =  obj[key]['from']
         num_choices = obj[key]['choose']
         return (options, num_choices)
-    log("NO '{}' FOUND !!!".format(key), 1)
+    log("Warning: NO '{}' FOUND !!!".format(key), 1)
     return ([], 0)
 
 class CharacterStats:
@@ -107,7 +107,7 @@ class CharacterStats:
         self.resolve_race_benefits()
         log('Finished Race')
 
-        self._class = 'cleric' #random.choice(self.get_classes())
+        self._class = random.choice(self.get_classes())
         log('Class: ' + str(self._class))
         self.resolve_class_benefits()
         log('Finished Class')
