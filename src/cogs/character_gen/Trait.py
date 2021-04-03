@@ -18,9 +18,14 @@ class Trait:
             self.desc = " ".join(obj['desc'])
 
     def __repr__(self):
-        result = '{}:\n'.format(self.name)
-        result += self.desc
+        result = '{}'.format(self.name)
         return result
+
+    def __eq__(self, other):
+        if type(other) == type(''):
+            return self.index == other or self.name == other
+        elif type(other) == type(self):
+            return self.index == other.index
 
 if __name__ == '__main__':
     traits = ['fey-ancestry']

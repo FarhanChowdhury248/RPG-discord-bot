@@ -1,11 +1,14 @@
 import random
 from urllib import request, parse
 import json
-# from cogs.character_gen.Trait import *
-# from cogs.character_gen.Equipment import *
-from Trait import *
-from Equipment import *
 import traceback
+
+if __name__ == '__main__':
+    from Trait import *
+    from Equipment import *
+else:
+    from cogs.character_gen.Trait import *
+    from cogs.character_gen.Equipment import *
 
 API_ROOT = 'https://www.dnd5eapi.co/api/'
 
@@ -74,30 +77,33 @@ def choose_from(obj, key):
     return ([], 0)
 
 class CharacterStats:
-    alignment = None
-    ability_scores = {}
-    proficiency_bonus = None
-    
-    race = None
-    proficiencies = []
-    speed = None
-    size = None
-    languages = []
-    traits = {}
-
-    _class = None
-    hit_die = None
-    saving_throws = []
-    equipment = []
-
-    spellcasting_ability = None
-    known_spells = []
-    prepared_spells = []
-    spell_slots = {}
-    for i in range(1, 10):
-        spell_slots[i] = 0
-
     def __init__(self):
+        self.alignment = None
+        self.ability_scores = {}
+        self.proficiency_bonus = None
+        self.ac = None
+        self.hit_points = None
+        self.passive_perception = None
+        
+        self.race = None
+        self.proficiencies = []
+        self.speed = None
+        self.size = None
+        self.languages = []
+        self.traits = []
+
+        self._class = None
+        self.hit_die = None
+        self.saving_throws = []
+        self.equipment = []
+
+        self.spellcasting_ability = None
+        self.known_spells = []
+        self.prepared_spells = []
+        self.spell_slots = {}
+        for i in range(1, 10):
+            self.spell_slots[i] = 0
+
         self.alignment = random.choice(self.get_alignments())
         self.ability_scores = self.get_ability_scores()
         self.proficiency_bonus = 2
@@ -113,6 +119,8 @@ class CharacterStats:
         log('Finished Class')
 
         self.resolve_armor_class()
+        self.resolve_hit_points()
+        self.resolve_passive_perception()
 
     def resolve_armor_class(self):
         valid_armors = [e.index for e in self.equipment if e.index in ARMOR_TO_AC]
@@ -125,6 +133,12 @@ class CharacterStats:
                 ac = max(ac, ARMOR_TO_AC[armor](mod))
         self.ac = ac
         log('Armor Class: {}'.format(self.ac))
+
+    def resolve_hit_points(self):
+        self.hit_points = self.hit_die + self.get_modifier('con')
+
+    def resolve_passive_perception(self):
+        self.passive_perception = 10 + self.proficiency_bonus + self.get_modifier('wis')
 
     def __repr__(self):
         result = 'Character:\n'
@@ -150,7 +164,7 @@ class CharacterStats:
 
         result += '\tTraits:\n'
         for trait in self.traits:
-            result += '\t\t{}\n'.format(self.traits[trait].name)
+            result += '\t\t{}\n'.format(trait.name)
         return result
 
     def get_alignments(self):
@@ -248,8 +262,8 @@ class CharacterStats:
         race_traits = [trait['index'] for trait in race_data['traits']]
         for trait in race_traits:
             if trait not in self.traits:
-                self.traits[trait] = Trait(trait)
-        log('Traits: {}'.format(list(self.traits.keys())), 1)
+                self.traits.append(Trait(trait))
+        log('Traits: {}'.format(self.traits), 1)
 
     def add_equipment(self, equipment):
         not_found = True
@@ -271,6 +285,7 @@ class CharacterStats:
             if st['index'] not in self.saving_throws:
                 self.saving_throws.append(st['index'])
         log('Hit die: {}'.format(self.hit_die), 1)
+        log('Saving Throws: {}'.format(self.saving_throws), 1)
 
         # proficiencies
         self.resolve_stat_collection(self.proficiencies, 
@@ -279,7 +294,6 @@ class CharacterStats:
             'proficiency_choices', 
             True)
         log('Proficiencies: {}'.format(self.proficiencies), 1)
-
 
         # equipment
         for e in class_data['starting_equipment']:
