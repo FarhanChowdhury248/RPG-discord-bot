@@ -4,3 +4,4 @@ def load_extensions(client, pre):
     client.load_extension('{}.example.Example'.format(pre))
     client.load_extension('{}.general.General'.format(pre))
     client.load_extension('{}.character_gen.CharacterGen'.format(pre))
+    client.load_extension('{}.roll.Roll'.format(pre))
