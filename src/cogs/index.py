@@ -5,3 +5,4 @@ def load_extensions(client, pre):
     client.load_extension('{}.general.General'.format(pre))
     client.load_extension('{}.character_gen.CharacterGen'.format(pre))
     client.load_extension('{}.roll.Roll'.format(pre))
+    client.load_extension('{}.search.Search'.format(pre))
