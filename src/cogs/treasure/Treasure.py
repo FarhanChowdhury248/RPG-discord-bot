@@ -52,8 +52,20 @@ class Treasure(commands.Cog):
             coin_rolls.append(self.do_roll(r))
 
         embed = discord.Embed(
-            title = 'Individual Treasure',
-            description = '\n'.join(['{} {} pieces'.format(coin_val, coin_type) for coin_val, coin_type in coin_rolls])
+            title = 'Rolling For Individual Treasure',
+            colour = discord.Color.blue()
+        )
+        embed.add_field(name = 'D100 Roll', value = roll, inline = False)
+        embed.add_field(
+            name = 'Treasure Rolls', 
+            value = '\n'.join(['{}d{} x {} {}P: {}'.format(
+                r['num_dice'], 
+                r['die_type'], 
+                r['multiplier'], 
+                r['piece_type'][0].upper(), 
+                cr[0]
+            ) for r, cr in zip(rolls, coin_rolls)]),
+            inline = False
         )
         await ctx.send(embed = embed)
 
