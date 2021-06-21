@@ -4,7 +4,7 @@ from urllib import request, parse
 import json
 from database.JSONDatabaseController import JSONDatabaseController
 from database.JSONCollection import JSONCollection
-from random import randint
+from random import randint, choice
 
 API_ROOT = 'https://www.dnd5eapi.co/api/'
 
@@ -46,6 +46,30 @@ class Treasure(commands.Cog):
         for i in range(int(num_dice)):
             roll_value += randint(1, int(die_type))
         return roll_value
+
+    def parse_valuable_roll(self, num_valuables, valuable_worth, valuable_type):
+        valuable_data = JSONDatabaseController().get_collection('loot').get_document('{}s'.format(valuable_type))
+        all_choices = valuable_data[str(valuable_worth)]
+        selected_choices = {}
+        for i in range(int(num_valuables)):
+            cur_choice = choice(all_choices)
+            if cur_choice in selected_choices:
+                selected_choices[cur_choice] +=  1
+            else:
+                selected_choices[cur_choice] = 1
+        return [(selected_choices[val], val) for val in selected_choices]
+
+    def process_magic_item_roll(self, num_items, table_type):
+        magic_items_data = JSONDatabaseController().get_collection('loot').get_document('magic items')[table_type]
+        rolled_items = {}
+        for i in range(int(num_items)):
+            d100_roll = randint(1, 100)
+            roll_bracket = find_bracket_key(d100_roll, magic_items_data.keys())
+            if magic_items_data[roll_bracket] in rolled_items:
+                rolled_items[magic_items_data[roll_bracket]] += 1
+            else:
+                rolled_items[magic_items_data[roll_bracket]] = 1
+        return ['{} ({})'.format(key, rolled_items[key]) for key in rolled_items]
 
     @commands.command()
     async def getIndTreasure(self, ctx, target_cr):
@@ -98,12 +122,17 @@ class Treasure(commands.Cog):
         )
         items = treasure_data[cr_bracket]['treasure'][roll_bracket]
         valuable_roll = self.do_valuable_roll(items['valuable'])
+        valuables = self.parse_valuable_roll(*valuable_roll)
         
         num_magic_item_rolls = [(
             self.do_roll(mi['num_dice'], mi['die_type']), 
             mi['magic_item_table']
         ) for mi in items['magic items']]
-        print(num_magic_item_rolls)
+        print()
+        magic_items = []
+        for mir in num_magic_item_rolls:
+            magic_items += self.process_magic_item_roll(*mir)
+        print(magic_items)
         
         embed = discord.Embed(
             title = 'Rolling For Horde Treasure',
@@ -127,18 +156,16 @@ class Treasure(commands.Cog):
             inline = False
         )
         embed.add_field(
-            name = 'Valuables',
-            value = '{} {} GP {}(s)'.format(*valuable_roll),
+            name = 'Valuables ({} GP Each)'.format(valuable_roll[1]),
+            value = '\n'.join([
+                '{1} ({0})'.format(*vals) for vals in valuables
+            ]),
             inline = False
         )
         if len(num_magic_item_rolls) != 0:
             embed.add_field(
                 name = 'Magic Items',
-                value = '\n'.join([
-                    'Roll {} times on table {}.'.format(
-                        *mir
-                    ) for mir in num_magic_item_rolls
-                ]),
+                value = '\n'.join(magic_items),
                 inline = False
             )
         await ctx.send(embed = embed)

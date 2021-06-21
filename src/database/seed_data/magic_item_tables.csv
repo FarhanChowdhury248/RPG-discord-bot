@@ -1,0 +1,364 @@
+﻿table,roll,item
+A,01_50,Potion of healing
+A,51_60,Spell scroll (cantrip)
+A,61_70,Potion of climbing
+A,71_90,Spell scroll (1st level)
+A,91_94,Spell scroll (2nd level)
+A,95_98,Potion of greater healing
+A,99,Bag of holding
+A,0,Driftglobe
+B,01_15,Potion of greater healing
+B,16_22,Potion of fire breath
+B,23_29,Potion of resistance
+B,30_34,"Ammunition, +1"
+B,35_39,Potion of animal friendship
+B,40_44,Potion of hill giant strength
+B,45_49,Potion of growth
+B,50_54,Potion of water breathing
+B,55_59,Spell scroll (2nd level)
+B,60_64,Spell scroll (3rd level)
+B,65_67,Bag of holding
+B,68_70,Keoghtom's ointment
+B,71_73,Oil of slipperiness
+B,74_75,Dust of disappearance
+B,76_77,Dust of dryness
+B,78_79,Dust of sneezing and choking
+B,80_81,Elemental gem
+B,82_83,Philter of love
+B,84,Alchemy jug
+B,85,Cap of water breathing
+B,86,Cloak of the manta ray
+B,87,Driftglobe
+B,88,Goggles of night
+B,89,Helm of comprehending languages
+B,90,Immovable rod
+B,91,Lantern of revealing
+B,92,Mariner's armor
+B,93,Mithral armor
+B,94,Potion of poison
+B,95,Ring of swimming
+B,96,Robe of useful items
+B,97,Rope of climbing
+B,98,Saddle of the cavalier
+B,99,Wand of magic detection
+B,100,Wand of secrets
+C,01_15,Potion of superior healing
+C,16_22,Spell scroll (4thlevel)
+C,23_27,"Ammunition, +2"
+C,28_32,Potion of clairvoyance
+C,33_37,Potion of diminution
+C,38_42,Potion of gaseous form
+C,43_47,Potion of frost giant strength
+C,48_52,Potion of stone giant strength
+C,53_57,Potion of heroism
+C,58_62,Potion of invulnerability
+C,63_67,Potion of mind reading
+C,68_72,Spell scroll (5thlevel)
+C,73_75,Elixir of health
+C,76_78,Oil of etherealness
+C,79_81,Potion of fire giant strength
+C,82_84,Quaal's feather token
+C,85_87,Scroll of protection
+C,88_89,Bag of beans
+C,90_91,Bead of force
+C,92,Chime of opening
+C,93,Decanter of endless water
+C,94,Eyes of minute seeing
+C,95,Folding boat
+C,96,Heward's handy haversack
+C,97,Horseshoes of speed
+C,98,Necklace of fireballs
+C,99,Periapt of health
+C,100,Sending Stones
+D,01_20,Potion of supreme healing
+D,21_30,Potion of invisibility
+D,31_40,Potion of speed
+D,41_50,Spell scroll (6thlevel)
+D,51_57,Spell scroll (7thlevel)
+D,58_62,"Ammunition, +3"
+D,63_67,Oil of sharpness
+D,68_72,Potion of flying
+D,73_77,Potion of cloud giant strength
+D,78_82,Potion of longevity
+D,83_87,Potion of vitality
+D,88_92,Spell scroll (8thlevel)
+D,93_95,Horseshoes of a zephyr
+D,96_98,Nolzur's marvelous pigments
+D,99,Bag of devouring
+D,100,Portable hole
+E,01_30,Spell scroll (8thlevel)
+E,31_55,Potion of storm giant strength
+E,56_70,Poti on of supreme healing
+E,71_85,Spell scroll (9st level)
+E,86_93,Universal solvent
+E,94_98,Arrow of slaying
+E,99_100,Sovereign glue
+F,01_15,"Weapon, +1"
+F,16_18,"Shield,+ 1"
+F,19_21,Sentinel shield
+F,22_23,Amulet of proof against detection and location
+F,24_25,Boots of elvenkind
+F,26_27,Boots of striding and springing
+F,27_29,Bracers of archery
+F,30_31,Brooch of shielding
+F,32_33,Broom of flying
+F,34_35,Cloak of elvenkind
+F,36_37,Cloak of protection
+F,38_39,Gauntlets of ogre power
+F,40_41,Hat of disguise
+F,42_43,Javelin of lightning
+F,44_45,Pearl of power
+F,46_47,"Rod of the pact keeper, + 1"
+F,48_49,Slippers of spider climbing
+F,50_51,Staff of the adder
+F,52_53,Staff of the python
+F,54_55,Sword of vengeance
+F,56_57,Trident of fish command
+F,58_59,Wand of magic missiles
+F,60_61,"Wand of the war mage, + 1"
+F,62_63,Wand of web
+F,64_65,Weapon of warning
+F,66,Adamantine armor (chain mail)
+F,67,Adamantine armor (chain shirt)
+F,68,Adamantine armor (scale mail)
+F,69,Bag of tricks (gray)
+F,70,Bag of tricks (rust)
+F,71,Bag of tricks (tan)
+F,72,Boots of the winterlands
+F,73,Circlet of blasting
+F,74,Deck of illusions
+F,75,Eversmoking bottle
+F,76,Eyes of charming
+F,77,Eyes of the eagle
+F,78,Figurine of wondrous power (silver raven)
+F,79,Gem of brightness
+F,80,Gloves of missile snaring
+F,81,Gloves of swimming and climbing
+F,82,Gloves of thievery
+F,83,Headband of intellect
+F,84,Helm of telepathy
+F,85,Instrument of the bards (Doss lute)
+F,86,Instrument of the bards (Fochlucan bandore)
+F,87,Instrument of the bards (Mac_Fuimidh cittern)
+F,88,Medallion of thoughts
+F,89,Necklace of adaptation
+F,90,Periapt of wound closure
+F,91,Pipes of haunting
+F,92,Pipes of the sewers
+F,93,Ring of jumping
+F,94,Ring of mind shielding
+F,95,Ring of warmth
+F,96,Ring of water walking
+F,97,Quiver of Ehlonna
+F,98,Stone of good luck
+F,99,Wind fan
+F,100,Winged boots
+G,01_11,"Weapon, +2"
+G,12_14,Figurine of wondrous power (roll d8 for type)
+G,15,Adamantine armor (breastplate)
+G,16,Adamantine armor (splint)
+G,17,Amulet of health
+G,18,Armor of vulnerability
+G,19,Arrow_catching shield
+G,20,Belt of dwarvenkind
+G,21,Belt of hill giant strength
+G,22,Berserker axe
+G,23,Boots of levitation
+G,24,Boots of speed
+G,25,Bowl of commanding water elementals
+G,26,Bracers of defense
+G,27,Brazier of commanding fire elementals
+G,28,Cape of the mountebank
+G,29,Censer of controlling air elementals
+G,30,"Armor, +1 chain mail"
+G,31,Armor of resistance (chain mail)
+G,32,Armor of resistance (chain shirt)
+G,33,"Armor,+ 1 chain shirt"
+G,34,Cloak of displacement
+G,35,Cloak of the bat
+G,36,Cube of force
+G,37,Daern's instant fortress
+G,38,Dagger of venom
+G,39,Dimensional shackles
+G,40,Dragon slayer
+G,41,Elven chain
+G,42,Flame tongue
+G,43,Gem of seeing
+G,44,Giant slayer
+G,45,Clamoured studded leather
+G,46,Helm of teleportation
+G,47,Horn of blasting
+G,48,Horn of Valhalla (silver or brass)
+G,49,Instrument of the bards (Canaithmandolin)
+G,50,Instrument ofthe bards (Cii lyre)
+G,51,loun stone (awareness)
+G,52,loun stone (protection)
+G,53,loun stone (reserve)
+G,54,loun stone (sustenance)
+G,55,Iron bands of Bilarro
+G,56,"Armor, + 1 leather"
+G,57,Armor of resistance (leather)
+G,58,Mace of disruption
+G,59,Mace of smiting
+G,60,Mace of terror
+G,61,Mantle of spell resistance
+G,62,Necklace of prayer beads
+G,63,Periapt of proof against poison
+G,64,Ring of animal influence
+G,65,Ring of evasion
+G,66,Ring of feather falling
+G,67,Ring of free action
+G,68,Ring of protection
+G,69,Ring of resistance
+G,70,Ring of spell storing
+G,71,Ring of the ram
+G,72,Ring of X_ray vision
+G,73,Robe of eyes
+G,74,Rod of rulership
+G,75,"Rod of the pact keeper, +2"
+G,76,Rope of entanglement
+G,77,"Armor, +1 scale mail"
+G,78,Armor of resistance (scale mail)
+G,79,"Shield, +2"
+G,80,Shield of missile attraction
+G,81,Staff of charming
+G,82,Staff of healing
+G,83,Staff of swarming insects
+G,84,Staff of the woodlands
+G,85,Staff of withering
+G,86,Stone of controlling earthelementals
+G,87,Sun blade
+G,88,Sword of life stealing
+G,89,Sword of wounding
+G,90,Tentacle rod
+G,91,Vicious weapon
+G,92,Wand of binding
+G,93,Wand of enemy detection
+G,94,Wand of fear
+G,95,Wand of fireballs
+G,96,Wand of lightning bolts
+G,97,Wand of paralysis
+G,98,"Wand of the war mage, +2"
+G,99,Wand of wonder
+G,100,Wings of flying
+H,01_10,"Weapon, +3"
+H,11_12,Amulet of the planes
+H,13_14,Carpet of flying
+H,15_16,Crystal ball (very rare version)
+H,17_18,Ring of regeneration
+H,19_20,Ring of shooting stars
+H,21_22,Ring of telekinesis
+H,23_24,Robe of scintillating colors
+H,25_26,Robe of stars
+H,27_28,Rod of absorption
+H,29_30,Rod of alertness
+H,31_32,Rod of security
+H,33_34,"Rod of the pact keeper, +3"
+H,35_36,Scimitar of speed
+H,37_38,"Shield, +3"
+H,39_40,Staff of fire
+H,41_42,Staff of frost
+H,43_44,Staff of power
+H,45_46,Staff of striking
+H,47_48,Staff of thunder and lightning
+H,49_50,Sword of sharpnes
+H,51_52,Wand of polymorph
+H,53_54,"Wand of the war mage, + 3"
+H,55,Adamantine armor (half plate)
+H,56,Adamantine armor (plate)
+H,57,Animated shield
+H,58,Belt of fire giant strength
+H,59,Belt of frost (or stone) giant strength
+H,60,"Armor, + 1 breastplate"
+H,61,Armor of resistance (breastplate)
+H,62,Candle of invocation
+H,63,"Armor, +2 chain mail"
+H,64,"Armor, +2 chain shirt"
+H,65,Cloak of arachnida
+H,66,Dancing sword
+H,67,Demon armor
+H,68,Dragon scale mail
+H,69,Dwarven plate
+H,70,Dwarven thrower
+H,71,Efreeti bottle
+H,72,Figurine of wondrous power (obsidian steed)
+H,73,Frost brand
+H,74,Helm of brilliance
+H,75,Horn ofValhalla (bronze)
+H,76,Instrument of the bards (Anstruthharp)
+H,77,loun stone (absorption)
+H,78,loun stone (agility)
+H,79,loun stone (fortitude)
+H,80,loun stone (insight)
+H,81,loun stone (intellect)
+H,82,loun stone (leadership)
+H,83,loun stone (strength)
+H,84,"Armor, +2 leather"
+H,85,Manual of bodily health
+H,86,Manual of gainful exercise
+H,87,Manual of golems
+H,88,Manual of quickness of action
+H,89,Mirror of life trapping
+H,90,Nine lives stealer
+H,91,Oathbow
+H,92,"Armor, +2 scale mail"
+H,93,Spellguard shield
+H,94,"Armor, + 1 splint"
+H,95,Armor of resistance (splint)
+H,96,"Armor, + 1 studded leather"
+H,97,Armor of resistance (studded leather)
+H,98,Tome of clear thought
+H,99,Tome of leadership and influence
+H,100,Tome of understanding
+I,01_05,Defender
+I,06_10,Hammer of thunderbolts
+I,11_15,Luck Blade
+I,16_20,Sword of answering
+I,21_23,Holy avenger
+I,24_26,Ring of djinni summoning
+I,27_29,Ring of invisibility
+I,30_32,Ring of spell turning
+I,36_38,Rod of lordly might
+I,39_41,Vorpal sword
+I,42_43,Belt of cloud giant strength
+I,44_45,"Armor, +2 breastplate"
+I,46_47,"Armor, +3 chain mail"
+I,48_49,"Armor, +3 chain shirt"
+I,50_51,Cloak of invisibility
+I,52_53,Crystal ball (legendary version)
+I,54_55,"Armor, + 1 half plate"
+I,56_57,Iron flask
+I,58_59,"Armor, +3 leather"
+I,60_61,"Armor, +1 plate"
+I,62_63,Robe of the archmagi
+I,64_65,Rod of resurrection
+I,66_67,"Armor, +1 scale mail"
+I,68_69,Scarab of protection
+I,70_71,"Armor, +2 splint"
+I,72_73,"Armor, +2 studded leather"
+I,74_75,Well of many worlds
+I,76,Magic armor (roll dl2)
+I,77,Apparatus of Kwalish
+I,78,Armor of invulnerability
+I,79,Belt of storm giant strength
+I,80,Cubic gate
+I,81,Deck of many things
+I,82,Efreeti chain
+I,83,Armor of resistance (half plate)
+I,84,Horn ofValhalla (iron)
+I,85,Instrument of the bards (OIIamh harp)
+I,86,loun stone (greater absorption)
+I,87,loun stone (mastery)
+I,88,loun stone (regeneration)
+I,89,Plate armor of etherealness
+I,90,Plate armor of resistance
+I,91,Ring of air elemental command
+I,92,Ring of earthelemental command
+I,93,Ring of fire elemental command
+I,94,Ring of three wishes
+I,95,Ring of water elemental command
+I,96,Sphere of annihilation
+I,97,Talisman of pure good
+I,98,Talisman of the sphere
+I,99,Talisman of ultimate evil
+I,100,Tome of the stilled tongue
