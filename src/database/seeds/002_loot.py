@@ -1,5 +1,6 @@
 import os
 import json
+import pandas as pd
 
 PATH_TO_DATA = os.path.dirname(__file__)
 
@@ -7,6 +8,22 @@ MAX_RANK = 100
 
 def get_path(file):
     return os.path.join(PATH_TO_DATA, 'data', '{}.json'.format(file))
+
+
+def get_magic_items_data():
+    magic_items_data = pd.read_csv(os.path.join(PATH_TO_DATA, 'seed_data', 'magic_item_tables.csv'))
+    parsed_data = {}
+    for index, row in magic_items_data.iterrows():
+        next_roll = int((str(row['roll'])).split('_')[-1])
+        next_item = row['item']
+        if next_roll == 0:
+            next_roll = 100
+        if (row['table']) in parsed_data:
+            parsed_data[row['table']][next_roll] = next_item
+        else:
+            parsed_data[row['table']] = {next_roll: next_item}
+    return parsed_data
+    
 
 '''
 individual treasure -> max CR -> max roll on d100 -> list of die rolls for coins
@@ -733,7 +750,8 @@ with open(get_path('loot'), 'w+') as f:
                 'Jade game board with solid gold playing pieces',
                 'Bejeweled ivory drinking horn with gold filigree'
             ]
-        }
+        },
+        'magic items': get_magic_items_data()
     }
     json.dump(data, f, indent=4, sort_keys=True)
     print('\tSeeded loot')
