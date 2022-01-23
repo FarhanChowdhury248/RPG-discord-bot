@@ -7,3 +7,4 @@ def load_extensions(client, pre):
     client.load_extension('{}.roll.Roll'.format(pre))
     client.load_extension('{}.search.Search'.format(pre))
     client.load_extension('{}.treasure.Treasure'.format(pre))
+    client.load_extension('{}.jukebox.Jukebox'.format(pre))
